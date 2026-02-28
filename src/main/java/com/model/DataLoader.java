@@ -73,6 +73,7 @@ public class DataLoader {
                 JSONObject qJSON = (JSONObject) questionsJSON.get(i);
                 String qId = (String) qJSON.get("questionId");
                 String title = (String) qJSON.get("title");
+                String description = (String) qJSON.get("description");
                 String difficulty = (String) qJSON.get("difficulty");
                 String type = (String) qJSON.get("type");
                 String category = (String) qJSON.get("category");
@@ -82,6 +83,7 @@ public class DataLoader {
                 long totalSuccesses = (Long) qJSON.get("totalSuccesses");
                 String createdAt = (String) qJSON.get("createdAt");
                 String lastUpdated = (String) qJSON.get("lastUpdated");
+                 // ignore question-level comments for now (empty list)
 
                 // create question object (constructor signature may differ)
                 InterviewQuestion q = new InterviewQuestion(
