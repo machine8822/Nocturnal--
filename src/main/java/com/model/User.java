@@ -1,0 +1,230 @@
+package com.model;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * Represents a system user account.
+ *
+ * @author Jonah Mosquera
+ */
+public class User {
+    private final UUID userId;
+    private final String email;
+    private String passwordHash;
+    private String firstName;
+    private String lastName;
+
+    private final LocalDateTime createdAt;
+    private LocalDateTime lastLogin;
+
+    private boolean isAdmin;
+    private boolean isContributor;
+
+    private Profile profile;
+    private final ArrayList<UUID> bookmarkedQuestionIds;
+
+    public User(String email, String password, String firstName, String lastName) {
+        this(UUID.randomUUID(), email, hashPassword(password), firstName, lastName,
+                LocalDateTime.now(), null, false, false, new Profile(), new ArrayList<>());
+    }
+
+    /**
+     * Constructor used by DataLoader when password is already stored as a hash.
+     */
+    public User(UUID userId, String email, String passwordHash, String firstName, String lastName) {
+        this(userId, email, passwordHash, firstName, lastName,
+                LocalDateTime.now(), null, false, false, new Profile(), new ArrayList<>());
+    }
+
+    public User(UUID userId,
+                String email,
+                String passwordHash,
+                String firstName,
+                String lastName,
+                LocalDateTime createdAt,
+                LocalDateTime lastLogin,
+                boolean isAdmin,
+                boolean isContributor,
+                Profile profile,
+                ArrayList<UUID> bookmarkedQuestionIds) {
+
+        this.userId = userId == null ? UUID.randomUUID() : userId;
+        this.email = (email == null) ? "" : email.trim();
+        this.passwordHash = passwordHash == null ? "" : passwordHash;
+        this.firstName = firstName == null ? "" : firstName;
+        this.lastName = lastName == null ? "" : lastName;
+        this.createdAt = createdAt == null ? LocalDateTime.now() : createdAt;
+        this.lastLogin = lastLogin;
+        this.isAdmin = isAdmin;
+        this.isContributor = isContributor;
+        this.profile = profile == null ? new Profile() : profile;
+        this.bookmarkedQuestionIds = (bookmarkedQuestionIds == null) ? new ArrayList<>() : bookmarkedQuestionIds;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getLastLogin() {
+        return lastLogin;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public boolean isContributor() {
+        return isContributor;
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
+
+    public void setContributor(boolean contributor) {
+        isContributor = contributor;
+    }
+
+    public void setFirstName(String firstName) {
+        if (firstName != null) this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        if (lastName != null) this.lastName = lastName;
+    }
+
+    public void setProfile(Profile profile) {
+        if (profile != null) this.profile = profile;
+    }
+
+    /**
+     * Validates the provided password against the stored hash.
+     */
+    public boolean login(String password) {
+        if (password == null) return false;
+        boolean ok = passwordHash.equals(hashPassword(password));
+        if (ok) {
+            lastLogin = LocalDateTime.now();
+        }
+        return ok;
+    }
+
+    /**
+     * Changes the password if oldPass matches and newPass meets complexity rules.
+     */
+    public boolean changePassword(String oldPass, String newPass) {
+        if (!login(oldPass)) return false;
+        if (!isValidPassword(newPass)) return false;
+        this.passwordHash = hashPassword(newPass);
+        return true;
+    }
+
+    public boolean addBookmark(UUID questionId) {
+        if (questionId == null) return false;
+        if (bookmarkedQuestionIds.contains(questionId)) return false;
+        bookmarkedQuestionIds.add(questionId);
+        return true;
+    }
+
+    public boolean removeBookmark(UUID questionId) {
+        if (questionId == null) return false;
+        return bookmarkedQuestionIds.remove(questionId);
+    }
+
+    public List<UUID> getBookmarkedQuestionIds() {
+        return Collections.unmodifiableList(bookmarkedQuestionIds);
+    }
+
+    private boolean isValidPassword(String password) {
+        if (password == null) return false;
+        if (password.length() < 8 || password.length() > 24) return false;
+        return hasUpperCase(password) && hasLowerCase(password) && hasDigit(password) && hasSpecialChar(password);
+    }
+
+    private boolean hasUpperCase(String password) {
+        for (int i = 0; i < password.length(); i++) {
+            if (Character.isUpperCase(password.charAt(i))) return true;
+        }
+        return false;
+    }
+
+    private boolean hasLowerCase(String password) {
+        for (int i = 0; i < password.length(); i++) {
+            if (Character.isLowerCase(password.charAt(i))) return true;
+        }
+        return false;
+    }
+
+    private boolean hasDigit(String password) {
+        for (int i = 0; i < password.length(); i++) {
+            if (Character.isDigit(password.charAt(i))) return true;
+        }
+        return false;
+    }
+
+    private boolean hasSpecialChar(String password) {
+        for (int i = 0; i < password.length(); i++) {
+            char c = password.charAt(i);
+            if (!Character.isLetterOrDigit(c)) return true;
+        }
+        return false;
+    }
+
+    public static String hashPassword(String password) {
+        if (password == null) return "";
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hash) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            return "";
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", isAdmin=" + isAdmin +
+                ", isContributor=" + isContributor +
+                "}";
+    }
+}
