@@ -47,9 +47,6 @@ public class SystemFacade {
         return questions.getByDifficulty(diff);
     }
 
-    public List<InterviewQuestion> searchQuestions(String keyword) {
-        
-    }
 
 
 }
