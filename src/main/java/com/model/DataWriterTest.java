@@ -36,9 +36,9 @@ public class DataWriterTest {
 		// Create a list of test users
 		ArrayList<User> users = new ArrayList<>();
 		
-		//dummy user uuids for testing
-		UUID user1Id = UUID.fromString("11111111-1111-1111-1111-111111111111");
-        UUID user2Id = UUID.fromString("22222222-2222-2222-2222-222222222222");
+		// fresh IDs so each run appends new records
+		UUID user1Id = UUID.randomUUID();
+        UUID user2Id = UUID.randomUUID();
 
 		// Create User 1 
 		User user1 = new User(
@@ -91,12 +91,12 @@ public class DataWriterTest {
 		// Create a list of test questions
 		ArrayList<InterviewQuestion> questions = new ArrayList<>();
 
-		UUID user1Id = UUID.fromString("11111111-1111-1111-1111-111111111111");
-        UUID user2Id = UUID.fromString("22222222-2222-2222-2222-222222222222");
+		UUID user1Id = UUID.randomUUID();
+        UUID user2Id = UUID.randomUUID();
 
 		// Create Question 1 
 		InterviewQuestion question1 = new InterviewQuestion(
-            UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+			UUID.randomUUID(),
             "Binary search time complexity",
             "What is the time complexity of binary search on a sorted array and why?",
             Difficulty.EASY,
@@ -122,7 +122,7 @@ public class DataWriterTest {
 		// Create Question 2
 
         InterviewQuestion question2 = new InterviewQuestion(
-            UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
+			UUID.randomUUID(),
             "Detecting duplicates in an array",
             "Given an integer array, explain an efficient approach to determine whether the array contains any duplicate values.",
             Difficulty.MEDIUM,

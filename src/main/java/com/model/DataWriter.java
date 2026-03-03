@@ -2,11 +2,13 @@ package com.model;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 /**
  * DataWriter saves User and InterviewQuestion objects to JSON files.
@@ -28,8 +30,7 @@ public class DataWriter {
 	 * @return true if save worked, false if there was an error
 	 */
 	public static boolean saveUsers(ArrayList<User> users) {
-		// reates an empty JSON array 
-		JSONArray jsonUsers = new JSONArray();
+		JSONArray jsonUsers = readJSONArrayFromFile(USER_FILE);
 
 		// For each user in the list, convert it to JSON and add it to the box
 		for (int i = 0; i < users.size(); i++) {
@@ -81,8 +82,7 @@ public class DataWriter {
 	 * @return true if save worked, false if there was an error
 	 */
 	public static boolean saveQuestions(ArrayList<InterviewQuestion> questions) {
-		// Create an empty JSON array to hold all questions
-		JSONArray jsonQuestions = new JSONArray();
+		JSONArray jsonQuestions = readJSONArrayFromFile(QUESTION_FILE);
 
 		// For each question in the list, convert it to JSON and add it to the array
 		for (int i = 0; i < questions.size(); i++) {
@@ -218,7 +218,13 @@ public class DataWriter {
 		try (FileWriter file = new FileWriter(filePath)) {
 			
             // Convert the JSON to a string and write it to the file
-			file.write(json.toString());
+			if (json instanceof JSONArray) {
+				file.write(((JSONArray) json).toJSONString());
+			} else if (json instanceof JSONObject) {
+				file.write(((JSONObject) json).toJSONString());
+			} else {
+				file.write(String.valueOf(json));
+			}
 			
 			// Make sure the data is actually written to disk and not stuck in mem
 			file.flush();
@@ -230,6 +236,18 @@ public class DataWriter {
 			System.err.println("Error writing to file: " + filePath);
 			e.printStackTrace();
 			return false;
+		}
+	}
+
+	private static JSONArray readJSONArrayFromFile(String filePath) {
+		try (Reader reader = new java.io.FileReader(filePath)) {
+			Object parsed = new JSONParser().parse(reader);
+			if (parsed instanceof JSONArray) {
+				return (JSONArray) parsed;
+			}
+			return new JSONArray();
+		} catch (Exception e) {
+			return new JSONArray();
 		}
 	}
 
