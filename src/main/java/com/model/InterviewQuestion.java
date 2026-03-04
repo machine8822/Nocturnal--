@@ -75,8 +75,8 @@ public class InterviewQuestion {
         this.totalSuccesses = totalSuccesses;
         this.imageURL = imageURL == null ? "" : imageURL;
 
-        this.comments = new ArrayList<>();
-        this.sections = new ArrayList<>();
+        this.comments = new HashMap<>();
+        this.sections = new HashMap<>();
     }
 
     /**
@@ -85,25 +85,32 @@ public class InterviewQuestion {
      */
     public void addSection(Section section) 
     {
-        if (section != null) 
+        if (section != null && section.getSectionId() != null) 
         {
-            sections.add(section);
+            sections.put(section.getSectionId(), section);
             touch();
         }
     }
 
+    /**
+     * Return a snapshot list of every section currently attached to this
+     * question.  This preserves the original API even though the storage is
+     * now a map.
+     */
     public List<Section> getSections() 
     {
-        return sections;
+        return new ArrayList<>(sections.values());
     }
 
-    public Section getSection(int index) 
+    /**
+     * Lookup a section by its UUID.  The old index-based accessor was
+     * removed since it made little sense for a map; clients should convert
+     * {@link #getSections()} to a list if they really need positional access.
+     */
+    public Section getSection(UUID id) 
     {
-        if (index < 0 || index >= sections.size())
-        {
-            return null;
-        }
-        return sections.get(index);
+        if (id == null) return null;
+        return sections.get(id);
     }
 
     /**

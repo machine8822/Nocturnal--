@@ -159,6 +159,22 @@ public class User {
         return Collections.unmodifiableList(bookmarkedQuestionIds);
     }
 
+    public boolean canCreateQuestions() {
+        return isAdmin || isContributor;
+    }
+
+    public boolean canAddQuestion() {
+        return canCreateQuestions();
+    }
+
+    public boolean canDeleteQuestion() {
+        return isAdmin;
+    }
+
+    public boolean canEditQuestion() {
+        return isAdmin || isContributor;
+    }
+
     private boolean isValidPassword(String password) {
         if (password == null) return false;
         if (password.length() < 8 || password.length() > 24) return false;
