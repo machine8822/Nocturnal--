@@ -1,5 +1,8 @@
 package com.model;
 
+import java.util.ArrayList;
+import java.util.UUID;
+
 /**
  * @author King
  */
@@ -43,12 +46,12 @@ public class SystemFacade {
         currentQuestion = questions.getQuestion(id);
     }
 
-    public List<InterviewQuestion> getQuestionsByCategory(Category cat) {
-        return questions.getByCategory(cat);
+    public ArrayList<InterviewQuestion> getQuestionsByCategory(Category cat) {
+        return new ArrayList<>(questions.getByCategory(cat));
     }
 
-    public List<InterviewQuestion> getQuestionsByDifficulty(Difficulty diff) {
-        return questions.getByDifficulty(diff);
+    public ArrayList<InterviewQuestion> getQuestionsByDifficulty(Difficulty diff) {
+        return new ArrayList<>(questions.getByDifficulty(diff));
     }
 
 

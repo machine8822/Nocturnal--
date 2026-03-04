@@ -21,7 +21,7 @@ public class DriverUI {
 			System.out.println("Sorry we couldn't login.");
 			return;
 		}
-		System.out.println("Amy Smith is now logged in");
+		System.out.println("Grant Smith is now logged in");
 
 	}
 
