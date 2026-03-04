@@ -37,9 +37,16 @@ public class SystemFacade {
     }
 
     public boolean logout() {
+        saveAllData();
         currentUser = null;
         currentQuestion = null;
         return true;
+    }
+
+    public boolean saveAllData() {
+        boolean usersSaved = DataWriter.saveUsers(users.getUsers());
+        boolean questionsSaved = DataWriter.saveQuestions(new ArrayList<>(questions.getAll()));
+        return usersSaved && questionsSaved;
     }
 
     public void selectQuestion(UUID id) {

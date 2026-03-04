@@ -30,7 +30,7 @@ public class DataWriter {
 	 * @return true if save worked, false if there was an error
 	 */
 	public static boolean saveUsers(ArrayList<User> users) {
-		JSONArray jsonUsers = readJSONArrayFromFile(USER_FILE);
+		JSONArray jsonUsers = new JSONArray();
 
 		// For each user in the list, convert it to JSON and add it to the box
 		for (int i = 0; i < users.size(); i++) {
@@ -82,7 +82,7 @@ public class DataWriter {
 	 * @return true if save worked, false if there was an error
 	 */
 	public static boolean saveQuestions(ArrayList<InterviewQuestion> questions) {
-		JSONArray jsonQuestions = readJSONArrayFromFile(QUESTION_FILE);
+		JSONArray jsonQuestions = new JSONArray();
 
 		// For each question in the list, convert it to JSON and add it to the array
 		for (int i = 0; i < questions.size(); i++) {
@@ -168,6 +168,7 @@ public class DataWriter {
 	/**
 	 * Helper method to convert an Answer object to JSON
 	 */
+	
 	private static JSONObject getAnswerJSON(Answer answer) {
 		JSONObject obj = new JSONObject();
 		obj.put("codeSnippet", answer.getCodeSnippet());

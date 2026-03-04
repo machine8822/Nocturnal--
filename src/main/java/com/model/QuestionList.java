@@ -17,6 +17,10 @@ public class QuestionList {
      */
     private QuestionList() {
         questions = new ArrayList<>();
+        ArrayList<InterviewQuestion> loaded = DataLoader.loadQuestions();
+        for (InterviewQuestion question : loaded) {
+            addQuestion(question);
+        }
     }
 
     /**

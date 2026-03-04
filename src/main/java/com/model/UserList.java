@@ -9,6 +9,7 @@ import java.util.UUID;
  *
  * @author Jonah Mosquera
  */
+
 public class UserList {
     private static UserList instance;
 
