@@ -65,6 +65,10 @@ public class SystemFacade {
         return users.addUser(user);
     }
 
+    public boolean deleteUser(UUID userId) {
+        return users.removeUser(userId);
+    }
+
     public ArrayList<User> getUsers() {
         return users.getUsers();
     }
