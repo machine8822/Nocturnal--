@@ -15,6 +15,7 @@ public class DriverUI {
 	public void run() {
 		scenario1();
 		scenario2();
+		scenario3();
 	}
 
 	public void scenario1() {
@@ -49,6 +50,8 @@ public class DriverUI {
 
 		if (driver.addUser(newUser)) {
 			System.out.println("User John Doe has been successfully created");
+
+			//DataWriter.saveUsers(driver.getInstance().getUsers());
 			//driver.saveAllData();
 			//driver.deleteUser(newUser.getUserId());
 		} else {
@@ -56,6 +59,16 @@ public class DriverUI {
 		}
 	}
 
+	public void scenario3() {
+		System.out.println("Scenario 3: Logout");
+
+		if (driver.logout()) {
+			System.out.println("User has been successfully logged out");
+		} else {
+			System.out.println("Sorry, we couldn't log out the user.");
+		}
+
+	}
 
 	public static void main(String[] args) {
 		DriverUI appInterface = new DriverUI();
