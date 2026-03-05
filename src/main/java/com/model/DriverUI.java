@@ -14,19 +14,25 @@ public class DriverUI {
 
 	public void run() {
 		scenario1();
-		scenario2();
-		scenario3();
+		//scenario2();
+		//scenario3();
 	}
 
 	public void scenario1() {
 		System.out.println("Scenario 1: Login");
 
 		User loggedInUser = driver.login("grant.smith@example.com", "123grant");
+		User failedLogin = driver.login("asshat@example.com", "wrongpassword");
 		if (loggedInUser == null) {
 			System.out.println("Sorry we couldn't login.");
 			return;
 		}
+
 		System.out.println("Grant Smith is now logged in");
+
+		if (failedLogin == null) {
+			System.out.println("Failed login attempt with incorrect credentials.");
+		}
 
 	}
 
