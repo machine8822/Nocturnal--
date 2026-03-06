@@ -33,7 +33,7 @@ public class DriverUI {
 		System.out.println("Grant Smith is now logged in");
 
 		if (failedLogin == null) {
-			System.out.println("Failed login attempt with incorrect credentials.");
+			System.out.println("Failed login attempt with " + failedLogin.getEmail());
 		}
 
 	}
@@ -59,8 +59,8 @@ public class DriverUI {
 		if (driver.addUser(newUser)) {
 			System.out.println("User John Doe has been successfully created");
 
-			// DataWriter.saveUsers(driver.getInstance().getUsers());
-			// driver.saveAllData();
+			DataWriter.saveUsers(driver.getInstance().getUsers());
+			driver.saveAllData();
 			// driver.deleteUser(newUser.getUserId());
 		} else {
 			System.out.println("Sorry, we couldn't create the user.");
@@ -92,7 +92,7 @@ public class DriverUI {
 		// Create a new interview question
 		InterviewQuestion newQuestion = new InterviewQuestion(
 				"How far can fish fly?",
-				"Given the weight and size, how far will that fucker fly?",
+				"Given the weight and size, how far will the fish fly?",
 				Difficulty.MEDIUM,
 				Category.LINKED_LIST,
 				QuestionType.SHORT_ANSWER,
@@ -100,7 +100,7 @@ public class DriverUI {
 
 		if (driver.addQuestion(newQuestion)) {
 			System.out.println("Question created successfully: " + newQuestion.getTitle());
-			// Save to JSON file
+
 			driver.saveAllData();
 			System.out.println("Question saved to questions.json");
 		} else {
@@ -112,6 +112,5 @@ public class DriverUI {
 	public static void main(String[] args) {
 		DriverUI appInterface = new DriverUI();
 		appInterface.run();
-
 	}
 }
